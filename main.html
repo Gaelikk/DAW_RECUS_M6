@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Document</title>
+    <style>
+        #main {
+            height: 200px;
+            width: 600px; /*50%;*/
+            background-color: navy;
+            color: white;
+            border: 10px solid black;
+            margin: 0 auto;
+            /* margin-top: 100px;*/
+        }
+
+        #buttons {
+            width: 150px; /*50%;*/
+            /*height: 50px;/*50%;*/
+            margin: 0 auto;
+            padding: 2em;
+        }
+    </style>
+    <script src="js/Secondari.js"></script>
+</head>
+<body>
+<div id="main">
+    <!--<h1>Click "Get Info" to provide your details</h1>-->
+</div>
+<div id="buttons">
+    <input type="button" onclick="loadWindow()" value="Get Info">
+    <input type="button" onclick="refreshWindow()" value="Refresh">
+</div>
+<script>
+    addEventListener("load", () => {
+        const main = document.getElementById('main');
+        console.log(document.cookie)
+        if (!navigator.cookieEnabled) {
+            main.innerHTML += `<h1>Click "Get Info" to provide your details</h1>`
+        } else {
+            main.innerHTML += `<h1>Hi, ${getCookieValue(document.cookie, "name")}!!!</h1>`
+            main.innerHTML += `<p>You were born on <strong>${getCookieValue(document.cookie, "birthDate")}</strong></p>`
+            main.innerHTML += `<p>That day was <strong>${getWeek()}</strong></p>`
+            main.innerHTML += `<p>And until now, you have had <strong>${getSameDayAsBirthDay()}</strong> birthdays on that day of week</p>`
+        }
+    })
+
+    const getWeek = () => {
+        let week = new Date(getCookieValue(document.cookie, "birthDate"))
+        let weekDayAr = ["Diumenge", "Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte"]
+        return weekDayAr[week.getDay()]
+    }
+
+    getSameDayAsBirthDay = () => {
+        let day = new Date(getCookieValue(document.cookie, "birthDate"))
+        console.log(day.getDay())
+        const today = formatDate(new Date());
+        return day.getDay() === today;
+    }
+
+
+    const getCookieValue = (cookieStr, cookieName) => {
+        let name = cookieName + "=";
+        let ca = cookieStr.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    const loadWindow = () => {
+        window.location.assign('Secondary.html')
+    }
+    const refreshWindow = () => {
+        window.location.reload();
+        getCookieValue();
+    }
+</script>
+</body>
+</html>
